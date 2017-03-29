@@ -17,7 +17,7 @@ import java.util.*;
  */
 public class HouseholdServiceCommunication {
 
-    private static final String HOUSEHOLD_BASE_URL = "http://localhost:8000/households/";
+    private static final String HOUSEHOLD_BASE_URL = "http://proj-339-smartsync:8000/households/";
 
     public HouseholdServiceCommunication() {
 
