@@ -9,5 +9,5 @@ public interface AuthRepository extends JpaRepository<Auth,Long> {
 
     Auth findByUserId(Long id);
 
-    Auth findBySessionId(Long id);
+    Auth findBySessionId(String id);
 }

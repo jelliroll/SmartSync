@@ -22,7 +22,7 @@ public class AuthService {
         return this.authRepository.findByUserId(id);
     }
 
-    public Auth getAuthBySessionId(Long id) {
+    public Auth getAuthBySessionId(String id) {
         return this.authRepository.findBySessionId(id);
     }
 
@@ -31,7 +31,7 @@ public class AuthService {
         return a;
     }
 
-    public Auth removeAuth(Long sessionId) {
+    public Auth removeAuth(String sessionId) {
         Auth a = this.authRepository.findBySessionId(sessionId);
 
         if(a == null) {

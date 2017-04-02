@@ -15,11 +15,11 @@ public class Auth {
 
     private Long userId;
 
-    private Long sessionId;
+    private String sessionId;
 
     private int role;
 
-    public Auth(Long userId, Long sessionId, int role) {
+    public Auth(Long userId, String sessionId, int role) {
         this.userId = userId;
         this.sessionId = sessionId;
         this.role = role;
@@ -37,7 +37,7 @@ public class Auth {
         return userId;
     }
 
-    public Long getSessionId() {
+    public String getSessionId() {
         return sessionId;
     }
 
@@ -53,7 +53,7 @@ public class Auth {
         this.userId = userId;
     }
 
-    public void setSessionId(Long sessionId) {
+    public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
 

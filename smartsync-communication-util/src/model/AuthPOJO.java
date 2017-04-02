@@ -8,11 +8,11 @@ public class AuthPOJO {
 
     private String googleId;
 
-    private long sessionId;
+    private String sessionId;
 
     private int role;
 
-    public AuthPOJO(String googleId, long sessionId, int role) {
+    public AuthPOJO(String googleId, String sessionId, int role) {
         this.googleId = googleId;
         this.sessionId = sessionId;
         this.role = role;
@@ -23,7 +23,7 @@ public class AuthPOJO {
         return googleId;
     }
 
-    public long getSessionId() {
+    public String getSessionId() {
         return sessionId;
     }
 
