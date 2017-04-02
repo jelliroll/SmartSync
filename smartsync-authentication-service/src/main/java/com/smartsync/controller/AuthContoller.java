@@ -1,9 +1,11 @@
 package com.smartsync.controller;
 
+import com.smartsync.error.ClientNotAuthorizedException;
+import com.smartsync.error.FailedToEndSessionException;
+import com.smartsync.error.UserNotRegisteredException;
 import com.smartsync.model.Auth;
 import com.smartsync.service.AuthService;
 import model.UserPOJO;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,8 @@ import java.util.UUID;
 
 /**
  * Created by trev on 4/1/17.
+ * REST Controller for authorization for endpoints across the
+ * system
  */
 @RestController
 public class AuthContoller {
@@ -30,57 +34,72 @@ public class AuthContoller {
 
     }
 
+    /**
+     *Takes a users google ID and returns a session ID if the user is
+     * registered for SmartSync
+     * @param googleId google id of user
+     * @return session id for user
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/login", produces = "application/json")
     public ResponseEntity logIn(@RequestHeader String googleId) {
         logger.info("Just recieved login Attempt from: " + googleId);
         UserPOJO authUser = userServiceCommunication.getUserByGoogleId(googleId);
 
         if(authUser == null) {
-            //throw exception
-        } else {
+            String url = "auth/login";
+            String message = "User not registered for SmartSync";
+
+            throw new UserNotRegisteredException(message,url);
+        }
             UUID newSessionId = UUID.randomUUID();
             Auth newAuth = new Auth(authUser.getUserId(),
                     newSessionId.toString(), authUser.getRole());
 
             authService.addAuth(newAuth);
             return ResponseEntity.ok(newAuth.getSessionId());
-        }
-
-        //TODO
-        return null;
     }
 
+
+    /**
+     * Ends a session for a given user
+     * @param sessionId session to end
+     * @return user id correlating to terminated session
+     */
     @RequestMapping(method = RequestMethod.GET , value = "/logout", produces = "application/json")
     public ResponseEntity logOut(@RequestHeader String sessionId) {
         logger.info("Just recieved logout attmept");
         Auth userAuth = authService.removeAuth(sessionId);
 
         if(userAuth == null) {
-            //throw exception
-        } else {
-            logger.info(userAuth.getUserId() + " successfully logged out");
-            return ResponseEntity.ok(userAuth.getUserId());
+            String message = "Failed to end sesson. Please IT";
+            String url = "auth/logout";
+            throw new FailedToEndSessionException(message, url);
         }
 
-        //TODO
-        return null;
+            logger.info(userAuth.getUserId() + " successfully logged out");
+            return ResponseEntity.ok(userAuth.getUserId());
+
     }
 
+    /**
+     * Validates a users session
+     * @param sessionId the session id for the user
+     * @return True if the user is authorized throws exception otherwise
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/validate", produces = "application/json")
     public ResponseEntity authenticate(@RequestHeader String sessionId) {
         logger.info("Trying to authenticate");
         Auth userAuth = authService.getAuthBySessionId(sessionId);
 
         if(userAuth == null) {
-            //throw exception
-        } else {
+            String message = "You are not authorized to access this data";
+            String url = "auth/validate";
+            throw new ClientNotAuthorizedException(message,url);
+
+        } else
             logger.info(userAuth.getUserId() + " Authenticated");
             return ResponseEntity.ok(true);
-        }
 
-
-        //TODO
-        return null;
     }
 
 }
