@@ -259,7 +259,7 @@ public class HouseholdController {
      * @return the response entity with the UserHouseHoldLookUp that was removed
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/users", produces = "application/json")
-    public ResponseEntity removeUserFromHousehold(@RequestBody UserAndHouseholdDTO userAndHouseholdDTO, Errors errors) {
+    public ResponseEntity removeUserFromHousehold(@RequestBody UserAndHouseholdDTO userAndHouseholdDTO,  Errors errors) {
 
         UserAndHouseholdValidator userAndHouseholdValidator = new UserAndHouseholdValidator();
         userAndHouseholdValidator.validate(userAndHouseholdDTO, errors);
